@@ -1,0 +1,3 @@
+*.o
+*.so
+/unwind_safeness_test
