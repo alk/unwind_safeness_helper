@@ -24,7 +24,7 @@ clean:
 unwind_safeness_test.o unwind_safeness_test.s: CFLAGS += -fpic
 
 test: test_without_helper test_with_helper
-test: test_fails_without_4 test_fails_without_2
+test: test_fails_without_4 test_fails_without_2 test_without_helper_1
 
 test_deps: unwind_safeness_test unwind_safeness_helper.so
 
@@ -41,6 +41,10 @@ test_without_helper: test_deps
 test_fails_without_2: test_deps
 	@echo "expecting failure for second test case without helper"
 	ulimit -c 0 && if UNWIND_PRETEND_SAFE=1 LD_LIBRARY_PATH="$(PWD)" ./unwind_safeness_test 2 ; then false; else echo "got expected crash!"; fi
+
+test_without_helper_1: test_deps
+	@echo "expecting success for first test case without helper"
+	UNWIND_PRETEND_SAFE=1 LD_LIBRARY_PATH="$(PWD)" ./unwind_safeness_test 1
 
 test_fails_without_4: test_deps
 	@echo "expecting failure for third test case without helper"
