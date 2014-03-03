@@ -84,10 +84,14 @@ void test_dlopen_close_works(void)
 {
 	void *rv;
 	assert(call_unwind_safeness_get() == 1);
-	rv = dlopen(NULL, RTLD_LOCAL);
+	rv = dlopen(NULL, RTLD_LAZY);
+	if (rv == NULL) {
+	  fprintf(stderr, "failed to dlopen self: %s\n", dlerror());
+	  abort();
+	}
 	assert(rv != NULL);
 	assert(last_dlopen.name == NULL);
-	assert(last_dlopen.flags == RTLD_LOCAL);
+	assert(last_dlopen.flags == RTLD_LAZY);
 	assert(last_dlopen.used == 1);
 	assert(dlclose(rv) == 0);
 	assert(called_dlopen);
